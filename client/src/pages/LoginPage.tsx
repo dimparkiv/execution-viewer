@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -18,6 +18,7 @@ declare global {
 export default function LoginPage() {
   const { login, user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -28,7 +29,14 @@ export default function LoginPage() {
   }, [isAuthenticated, user, navigate]);
 
   const handleCredentialResponse = useCallback(async (response: { credential: string }) => {
-    await login(response.credential);
+    setLoginError(null);
+    try {
+      await login(response.credential);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Login failed';
+      console.error('Login failed:', msg);
+      setLoginError(msg);
+    }
   }, [login]);
 
   useEffect(() => {
@@ -69,6 +77,17 @@ export default function LoginPage() {
       </h1>
       <p style={{ color: '#888', marginBottom: '2rem' }}>Sign in to continue</p>
       <div id="google-btn" />
+      {loginError && (
+        <p style={{
+          marginTop: '1rem',
+          color: '#ff6b6b',
+          fontSize: '0.85rem',
+          maxWidth: 320,
+          textAlign: 'center',
+        }}>
+          {loginError}
+        </p>
+      )}
     </div>
   );
 }

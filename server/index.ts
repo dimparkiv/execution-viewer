@@ -11,6 +11,12 @@ import executionRoutes from './routes/executions';
 
 const app = express();
 
+// Allow Google Sign-In popup to communicate back via postMessage
+app.use((_req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  next();
+});
+
 app.use(cors({
   origin: config.isProduction ? true : 'http://localhost:5173',
   credentials: true,
@@ -44,6 +50,7 @@ if (config.isProduction) {
 
 app.listen(config.port, async () => {
   console.log(`Server running on port ${config.port} (${config.nodeEnv})`);
+  console.log(`GOOGLE_CLIENT_ID: ${config.googleClientId ? config.googleClientId.slice(0, 20) + '...' : '❌ NOT SET'}`);
   if (config.databaseUrl) {
     try {
       await checkConnection();

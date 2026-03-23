@@ -54,8 +54,13 @@ router.post('/google', async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error('Auth error:', error);
-    res.status(401).json({ error: 'Authentication failed' });
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('Auth error:', message);
+    // Surface the real reason in dev; generic message in prod
+    res.status(401).json({
+      error: 'Authentication failed',
+      detail: config.isProduction ? undefined : message,
+    });
   }
 });
 

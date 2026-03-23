@@ -40,14 +40,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       credentials: 'include',
       body: JSON.stringify({ idToken }),
     });
+
     const data = await res.json();
+
+    if (!res.ok) {
+      const msg = data.detail || data.error || `Login failed (${res.status})`;
+      console.error('Login error from server:', msg);
+      throw new Error(msg);
+    }
 
     if (data.status === 'pending') {
       setUser({ ...data.user, role: 'pending' });
     } else if (data.status === 'ok') {
       setUser(data.user);
     } else {
-      throw new Error('Login failed');
+      throw new Error('Login failed: unexpected server response');
     }
   }, []);
 
