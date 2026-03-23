@@ -1,3 +1,6 @@
+// Allow self-signed certs in Railway's network (needed for google-auth-library)
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 import express from 'express';
 import path from 'path';
 import cors from 'cors';

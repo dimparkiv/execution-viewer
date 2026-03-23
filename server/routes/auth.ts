@@ -59,7 +59,7 @@ router.post('/google', async (req: Request, res: Response) => {
     // Surface the real reason in dev; generic message in prod
     res.status(401).json({
       error: 'Authentication failed',
-      detail: message, // TODO: hide in production once auth is working
+      detail: config.isProduction ? undefined : message,
     });
   }
 });
