@@ -7,6 +7,7 @@
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "tsx watch server/index.ts",
     "dev:client": "cd client && npx vite --host",
+    "postinstall": "cd client && npm install",
     "build": "cd client && npx vite build && cd .. && npx tsc -p tsconfig.json",
     "start": "node dist/server/index.js",
     "db:migrate": "tsx server/db/migrate.ts"
@@ -18,11 +19,11 @@
     "jsonwebtoken": "^9.0.2",
     "google-auth-library": "^9.14.0",
     "dotenv": "^16.4.5",
-    "cookie-parser": "^1.4.6"
+    "cookie-parser": "^1.4.6",
+    "typescript": "^5.5.0",
+    "tsx": "^4.16.0"
   },
   "devDependencies": {
-    "typescript": "^5.5.0",
-    "tsx": "^4.16.0",
     "@types/express": "^4.17.21",
     "@types/pg": "^8.11.6",
     "@types/jsonwebtoken": "^9.0.6",
